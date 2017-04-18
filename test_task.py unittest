@@ -1,0 +1,171 @@
+# -*- coding: utf-8 -*-
+
+"""Test case to check ... creation on .com"""
+
+import re
+import time
+import unittest
+from selenium import webdriver
+from selenium.webdriver.support.ui import Select
+
+
+class TestTask(unittest.TestCase):
+
+    def setUp(self):
+        """Definition of instructions that will be executed before test:
+            - Create a new Firefox session.
+            - Define the application home page
+        """
+        self.driver = webdriver.Firefox()
+        self.driver.implicitly_wait(30)
+        self.base_url = "http://25h8-exchange.byustudio.in.ua"
+
+    def test_task(self):
+        """Navigate to the application home page"""
+        driver = self.driver
+        driver.get(self.base_url)
+        """Log in:
+            - Fill in user email prozorroytenderowner@gmail.com.
+            - Fill in password 123456.
+        """
+        driver.find_element_by_xpath("//a[contains(@href, '/login')]").click()
+        driver.find_element_by_id("loginform-username").clear()
+        driver.find_element_by_id("loginform-username").send_keys(
+            "prozorroytenderowner@gmail.com")
+        driver.find_element_by_id("loginform-password").clear()
+        driver.find_element_by_id("loginform-password").send_keys("123456")
+        driver.find_element_by_name("login-button").click()
+        time.sleep(10)
+        """Close pop-up window with current orders/tenders"""
+        driver.find_element_by_xpath("//*[@id='events']").click()
+        time.sleep(3)
+        """Create new tender:
+            - Click on "Публічні закупівлі" element.
+            - Click on "Всі закупівлі" element.
+            - Click on "Створити тендер" element.
+        """
+        driver.find_element_by_xpath(
+            "//a[@href='http://25h8-exchange.byustudio.in.ua/tenders']"
+            ).click()
+        time.sleep(3)
+        driver.find_element_by_xpath(
+            "//a[@href='http://25h8-exchange.byustudio.in.ua/tenders/index']"
+            ).click()
+        time.sleep(3)
+        driver.find_element_by_xpath(
+            "//a[@href='http://25h8-exchange.byustudio.in.ua/buyer/tender/create']"
+            ).click()
+        time.sleep(3)
+        """Fill in "Очікувана вартість" form"""
+        driver.find_element_by_id("value-amount").clear()
+        driver.find_element_by_id("value-amount").send_keys("3333.00")
+        time.sleep(3)
+        """Fill in "Розмір мінімального кроку пониження ціни" form"""
+        driver.find_element_by_id("minimalstepvalue-amount").clear()
+        driver.find_element_by_id("minimalstepvalue-amount").send_keys("30.00")
+        time.sleep(3)
+        """Fill in "Конкретна назва предмету закупівлі" form"""
+        driver.find_element_by_id("tender-title").clear()
+        driver.find_element_by_id("tender-title").send_keys(u"Гречка")
+        time.sleep(3)
+        """Fill in "Примітки" form"""
+        driver.find_element_by_id("tender-description").clear()
+        driver.find_element_by_id("tender-description").send_keys(u"Добра")
+        time.sleep(3)
+        """Fill in "Опис окремої частини лота" form"""
+        driver.find_element_by_id("item-0-description").clear()
+        driver.find_element_by_id("item-0-description").send_keys(
+            u"Не з Китаю")
+        time.sleep(3)
+        """Fill in "Кiлькiсть" form"""
+        driver.find_element_by_id("item-0-quantity").clear()
+        driver.find_element_by_id("item-0-quantity").send_keys("1")
+        time.sleep(3)
+        """Fill in "Код ДК 021-2015 (CPV)" form"""
+        driver.find_element_by_id("classification-0-description").click()
+        time.sleep(3)
+        driver.find_element_by_id("03000000-1").click()
+        time.sleep(3)
+        driver.find_element_by_id("btn-ok").click()
+        time.sleep(3)
+        """Fill in "Класифікація згідно ДК 003:2010" form"""
+        driver.find_element_by_id(
+            "additionalclassifications-0-description").click()
+        time.sleep(3)
+        driver.find_element_by_id("6").click()
+        time.sleep(3)
+        driver.find_element_by_id("btn-ok").click()
+        time.sleep(3)
+        """Select country"""
+        Select(driver.find_element_by_id(
+            "deliveryaddress-0-countryname")).select_by_visible_text(
+                u"Україна")
+        time.sleep(3)
+        """Select region"""
+        Select(driver.find_element_by_id(
+            "deliveryaddress-0-region")).select_by_visible_text(
+                u"Львівська область")
+        time.sleep(3)
+        """Specify city"""
+        driver.find_element_by_id("deliveryaddress-0-locality").clear()
+        driver.find_element_by_id("deliveryaddress-0-locality").send_keys(
+            u"Львів")
+        time.sleep(3)
+        """Specify street"""
+        driver.find_element_by_id("deliveryaddress-0-streetaddress").clear()
+        driver.find_element_by_id(
+            "deliveryaddress-0-streetaddress").send_keys(u"Виговського")
+        time.sleep(3)
+        """Specify postcode"""
+        driver.find_element_by_id("deliveryaddress-0-postalcode").clear()
+        driver.find_element_by_id("deliveryaddress-0-postalcode").send_keys(
+            "79050")
+        time.sleep(3)
+        """Specify delivery start date """
+        driver.find_element_by_id("itemdeliverydate-0-startdate").click()
+        driver.find_element_by_id("itemdeliverydate-0-startdate").clear()
+        driver.find_element_by_id(
+            "itemdeliverydate-0-startdate").send_keys("24/05/2017 00:00")
+        time.sleep(3)
+        """Specify delivery end date"""
+        driver.find_element_by_id("itemdeliverydate-0-enddate").click()
+        driver.find_element_by_id("itemdeliverydate-0-enddate").clear()
+        driver.find_element_by_id(
+            "itemdeliverydate-0-enddate").send_keys("28/05/2017 00:00")
+        time.sleep(3)
+        """Add end date of specification"""
+        driver.find_element_by_id("enquiryperiod-enddate").click()
+        driver.find_element_by_id("enquiryperiod-enddate").clear()
+        driver.find_element_by_id(
+            "enquiryperiod-enddate").send_keys("20/05/2017 00:00")
+        time.sleep(3)
+        """Add start date of offers"""
+        driver.find_element_by_id("period-startdate").click()
+        driver.find_element_by_id("period-startdate").clear()
+        driver.find_element_by_id(
+            "period-startdate").send_keys("21/05/2017 00:00")
+        time.sleep(3)
+        """Add end date of offers"""
+        driver.find_element_by_id("period-enddate").click()
+        driver.find_element_by_id("period-enddate").clear()
+        driver.find_element_by_id(
+            "period-enddate").send_keys("22/05/2017 00:00")
+        time.sleep(3)
+        """Add infoermation about contact person"""
+        Select(driver.find_element_by_name(
+            "Tender[procuringEntity][contactPoint][fio]"
+            )).select_by_visible_text(u"Олег Олегов Олегович")
+        time.sleep(3)
+        """Submit newly created tender"""
+        driver.find_element_by_xpath("//button[@type='submit']").click()
+        time.sleep(10)
+        """Print tender ID in console"""
+        element = driver.find_element_by_xpath("//*[@tid='tenderID']")
+        print element.text
+
+    def tearDown(self):
+        """Close a browser window"""
+        self.driver.close()
+
+if __name__ == "__main__":
+    unittest.main()
